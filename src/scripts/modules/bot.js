@@ -2,8 +2,10 @@
 'use strict';
 
 var Vec = require('./Vec'),
-    curve = require('./Curve');
+    curve = require('./Curve'),
+    M = require('./Math');
 
+window.M = M;
 module.exports = (function() {
 
     var Bot = function( posx, posy, speed, targetx, targety, gfx ) {
@@ -12,7 +14,11 @@ module.exports = (function() {
 
         _.pos = new Vec(posx, posy);
         _.target = new Vec(targetx, targety);
-        _.vector = _.target.minusNew(_.target);
+
+        _.diff = _.target.minusNew( _.pos );
+        _.distance = _.diff.magnitude();
+        // _.vector = _.pos.minusNew(_.target).normaliseNew().multiplyEq(3);
+        _.vector = new Vec( (Math.random() * 2)-1, (Math.random() * 2)-1 ).normalise().multiplyEq(6);
         _.speed = speed;
 
         _.history = [];
@@ -24,36 +30,41 @@ module.exports = (function() {
     Bot.prototype = {
 
         draw: function() {
-            var _ = this;
-            _.gfx.clear();
-            // _.gfx.beginFill(0xFFFFFF, 1);
-            // _.gfx.lineStyle(1, 0xFFFFFF, 1);
-            // _.gfx.drawCircle(_.pos.x, _.pos.y, 5);
-            curve.draw(_.gfx, _.history, 0.38888, 0xFFFFFF);
+            this.gfx.clear();
+            // this.gfx.beginFill(0xFFFFFF, 1);
+            // this.gfx.lineStyle(1, 0xFFFFFF, 1);
+            // this.gfx.drawCircle(this.pos.x, this.pos.y, 5);
+            curve.draw(this.gfx, this.history, 0.38888, 0xFFFFFF);
         },
 
         integrate: function(power) {
-            var _ = this;
 
-            if ( !_.pos.isCloseTo(_.target, 10) ) {
-                _.distance = _.pos.minusNew( _.target ).magnitude();
-                _.angleVector = _.pos.minusNew( _.target).normalise();
-                _.vector.minusEq( _.angleVector ).normalise();
-                _.pos.plusEq( _.vector.normalise().multiplyEq( 4+_.distance/80 ) );
+            this.diff = this.target.minusNew( this.pos );
+            this.dotDiff = M.diff(this.vector.normaliseNew().dot( this.diff.normaliseNew() ), 1);
+            this.dotTest = M.diff(this.vector.normaliseNew().rotate(0.02, true).dot( this.diff.normaliseNew() ), 1);
+
+            if ( this.dotDiff <= this.dotTest ) {
+                this.vector.rotate(-0.02, true);
+            } else {
+                this.vector.rotate(0.02, true);
             }
 
-
-            _.history.push(_.pos.x);
-            _.history.push(_.pos.y);
-
-            if ( _.history.length > 30 ) {
-                _.history.shift();
-                _.history.shift();
+            if ( !this.pos.isCloseTo(this.target, 10) ) {
+                this.pos.plusEq( this.vector );
+                this.history.push(this.pos.x);
+                this.history.push(this.pos.y);
             }
 
+            if ( this.history.length > 10 || this.pos.isCloseTo(this.target, 10) ) {
+                this.history.shift();
+                this.history.shift();
+            }
 
+            if ( this.history.length < 1 ) {
+                this.alive = false;
+            }
 
-            _.draw();
+            this.draw();
         }
     };
 

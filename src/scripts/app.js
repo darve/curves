@@ -28,41 +28,21 @@ var Vec     = require('./modules/Vec'),
         delta,
 
         bastard = [],
-
+        grid = [],
         bots = [],
         pos = [],
 
         gfx = new PIXI.Graphics(),
-
+        gridgfx = new PIXI.Graphics(),
         target = new Vec(w/2, h/2),
         targetgfx = new PIXI.Graphics(),
 
         // Some rad colours, should we need any.
         colours = [
-            0xed5565,
-            0xda4453,
-            0xfc6e51,
-            0xe9573f,
-            0xffce54,
-            0xfcbb42,
-            0xa0d468,
-            0x8cc152,
-            0x48cfad,
-            0x37bc9b,
-            0x4fc1e9,
-            0x3bafda,
-            0x5d9cec,
-            0x4a89dc,
-            0xac92ec,
-            0x967adc,
-            0xec87c0,
-            0xd770ad,
-            0xf5f7fa,
-            0xe6e9ed,
-            0xccd1d9,
-            0xaab2bd,
-            0x656d78,
-            0x434a54
+            0xe5a629,
+            0xe64040,
+            0xd1c8b2,
+            0x208c86
         ];
 
     function randomColour() {
@@ -76,12 +56,12 @@ var Vec     = require('./modules/Vec'),
         window.requestAnimationFrame(render);
         now = Date.now();
         delta = now - then;
-
+        var dead = [];
         if (delta > interval) {
             then = now - (delta % interval);
             // gfx.clear();
             bots.forEach(function(bot, index) {
-                bot.integrate();
+                if ( bot.alive ) bot.integrate();
             });
 
             renderer.render(stage);
@@ -114,14 +94,9 @@ var Vec     = require('./modules/Vec'),
             );
 
             stage.addChild(bots[bots.length-1].gfx);
-
-            // if ( pos.length > 6 ) {
-            //     gfx.clear();
-            //     curve.draw(gfx, pos, 0.38888, randomColour());
-            // }
         });
 
-        // for ( var f = 0; f < 100; f ++ ) {
+        for ( var f = 0; f < 3; f++ ) {
             bots.push( new Bot(
                     Math.floor(Math.random() * w), Math.floor(Math.random() * h),
                     // 300, 200,
@@ -132,12 +107,21 @@ var Vec     = require('./modules/Vec'),
             );
 
             stage.addChild(bots[bots.length-1].gfx);
-        // }
+        }
 
-        // targetgfx.beginFill(0xFFFFFF, 1);
-        // targetgfx.lineStyle(1, 0xFFFFFF, 1);
-        // targetgfx.drawCircle(target.x, target.y, 10);
-        // stage.addChild(targetgfx);
+        for ( var y = 0; y < 5; y++ ) {
+            for ( var x = 0; x < 7; x++ ) {
+                gridgfx.beginFill(randomColour(), 1);
+                gridgfx.lineStyle(2, 0x38092F, 1);
+                gridgfx.drawRect((w/2)-140+(40*x),(h/2)-100+(40*y), 40, 40);
+            }
+        }
+        stage.addChild(gridgfx);
+
+        targetgfx.beginFill(0xFFFFFF, 1);
+        targetgfx.lineStyle(1, 0xFFFFFF, 1);
+        targetgfx.drawCircle(target.x, target.y, 10);
+        stage.addChild(targetgfx);
         stage.addChild(gfx);
 
         // Start the rendering loop wahey oh yeah

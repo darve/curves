@@ -8,7 +8,12 @@ module.exports = (function() {
         return Number(random.toFixed(dec));
     }
 
+    function diff(a, b) {
+        return Math.abs(a-b);
+    }
+
     return {
-        rand: rand
+        rand: rand,
+        diff: diff
     };
 })();
