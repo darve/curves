@@ -109,14 +109,14 @@ var Vec     = require('./modules/Vec'),
             stage.addChild(bots[bots.length-1].gfx);
         }
 
-        for ( var y = 0; y < 5; y++ ) {
-            for ( var x = 0; x < 7; x++ ) {
-                gridgfx.beginFill(randomColour(), 1);
-                gridgfx.lineStyle(2, 0x38092F, 1);
-                gridgfx.drawRect((w/2)-140+(40*x),(h/2)-100+(40*y), 40, 40);
-            }
-        }
-        stage.addChild(gridgfx);
+        // for ( var y = 0; y < 5; y++ ) {
+        //     for ( var x = 0; x < 7; x++ ) {
+        //         gridgfx.beginFill(randomColour(), 1);
+        //         gridgfx.lineStyle(2, 0x38092F, 1);
+        //         gridgfx.drawRect((w/2)-140+(40*x),(h/2)-100+(40*y), 40, 40);
+        //     }
+        // }
+        // stage.addChild(gridgfx);
 
         targetgfx.beginFill(0xFFFFFF, 1);
         targetgfx.lineStyle(1, 0xFFFFFF, 1);

@@ -44,9 +44,9 @@ module.exports = (function() {
             this.dotTest = M.diff(this.vector.normaliseNew().rotate(0.02, true).dot( this.diff.normaliseNew() ), 1);
 
             if ( this.dotDiff <= this.dotTest ) {
-                this.vector.rotate(-0.02, true);
+                this.vector.rotate(-0.06, true);
             } else {
-                this.vector.rotate(0.02, true);
+                this.vector.rotate(0.06, true);
             }
 
             if ( !this.pos.isCloseTo(this.target, 10) ) {
@@ -55,7 +55,7 @@ module.exports = (function() {
                 this.history.push(this.pos.y);
             }
 
-            if ( this.history.length > 10 || this.pos.isCloseTo(this.target, 10) ) {
+            if ( this.history.length > 120 || this.pos.isCloseTo(this.target, 10) ) {
                 this.history.shift();
                 this.history.shift();
             }
