@@ -1,3 +1,3 @@
-### Wax
+# Curves
 
-A dead simple canvas app boilerplate. Uses Compass for SCSS compilation.
+A ***profoundly*** non-performant WeblGL thing with little spline lads flying all over the god damn place.
